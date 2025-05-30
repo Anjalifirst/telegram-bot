@@ -2,7 +2,6 @@ from dotenv import load_dotenv
 import os
 from telegram.constants import ChatAction
 import tempfile
-import shutil
 from gemini_response import gemini_response, get_latest_pdf_path
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
@@ -39,11 +38,11 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text("No PDF has been generated yet.")
         return
     
-    gr_message = {"text": user_text, "files": []}
+    message = {"text": user_text, "files": []}
     history = []  
     
     # Call existing gemini_response function
-    reply = gemini_response(gr_message, history)
+    reply = gemini_response(message, history)
 
     # If gemini_response returns a string, send it back to user
     await update.message.reply_text(reply)
@@ -72,12 +71,12 @@ async def handle_document(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
             print(f"File downloaded to: {file_path}")
 
-            gr_message = {
+            message = {
                 "text": update.message.caption or "",
                 "files": [file_path],
             }
             history = []
-            reply = gemini_response(gr_message, history)
+            reply = gemini_response(message, history)
 
             await update.message.reply_text(reply)
     except Exception as e:
@@ -109,12 +108,12 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
             print(f"Photo downloaded to: {file_path}")
 
-            gr_message = {
+            message = {
                 "text": update.message.caption or "",
                 "files": [file_path],
             }
             history = []
-            reply = gemini_response(gr_message, history)
+            reply = gemini_response(message, history)
 
             await update.message.reply_text(reply)
     except Exception as e:
@@ -137,3 +136,4 @@ if __name__ == "__main__":
     # Start polling Telegram for new updates (messages)
     app.run_polling()
 
+   
