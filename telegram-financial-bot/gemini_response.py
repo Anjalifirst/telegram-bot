@@ -4,7 +4,6 @@ import os
 from pathlib import Path
 from textwrap import dedent
 import tempfile
-import gradio as gr
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types as T
@@ -95,7 +94,7 @@ def create_pdf_output(text, filename="Telegram_AI_Response.pdf "):
 
 
 # -----------------------------------------------------------------------------------------------------
-def gemini_response(gr_message, history):
+def gemini_response(message, history):
     """
     Main function to process user input and files, send to Gemini AI chatbot,
     generate response, and produce a downloadable PDF of the answer.
@@ -104,8 +103,8 @@ def gemini_response(gr_message, history):
     global latest_pdf_path  
 
     # Extract the text and files from the input
-    text_message = gr_message.get("text", "")
-    file_list = gr_message.get("files", [])
+    text_message = message.get("text", "")
+    file_list = message.get("files", [])
 
     # Return last generated PDF 
     if text_message.strip().lower() == "generate pdf":
